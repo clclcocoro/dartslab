@@ -1,9 +1,13 @@
-* { padding: 0;
+* { background: url('treewall.jpg');
+    padding: 0;
     margin: 0;
+    text-align: center;
 }
 
-canvas { background: url('treewall.jpg');
-    display: block;
+canvas {
+    display: inline;
+    min-width: 480px;
+    min-height: 360px;
     margin: 0;
     auto;
 }

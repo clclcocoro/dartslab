@@ -1,12 +1,18 @@
 part = Math.PI / 10;
 sangle = Math.PI / 20;
-bx = 760;
-by = 490;
-br = 300;
 white = "#FFC4A4";
 red = "#900";
 green = "#080";
 var canvas = document.getElementById("dartsgameCanvas");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+bx = canvas.offsetWidth*0.5;
+by = canvas.offsetHeight*0.5;
+if (bx < by) {
+    br = bx * 0.7;
+} else {
+    br = by * 0.7;
+}
 var ctx = canvas.getContext("2d");
 ctx.beginPath();
 ctx.arc(bx, by, 1.3*br, 0, Math.PI*2, false);
