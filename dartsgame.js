@@ -1,6 +1,6 @@
 part = Math.PI / 10;
 sangle = Math.PI / 20;
-white = "#FFC4A4";
+white = "#FFE4C4";
 red = "#900";
 green = "#080";
 var canvas = document.getElementById("dartsgameCanvas");
