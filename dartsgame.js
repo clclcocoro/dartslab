@@ -1,6 +1,6 @@
 part = Math.PI / 10;
 sangle = Math.PI / 20;
-white = "#FFE4C4";
+white = "#CEB494";
 red = "#900";
 green = "#080";
 var canvas = document.getElementById("dartsgameCanvas");
@@ -87,3 +87,29 @@ for (i = 0; i < 20; i++) {
     ctx.fillText(nums[i],0, 0);
     ctx.restore();
 }
+
+function onClick(e) {
+    x = e.clientX;
+    y = e.clientY;
+    ctx.beginPath();
+    ctx.arc(x, y, 0.3*br/20, 0, Math.PI*2, false);
+    ctx.fillStyle = "#444";
+    ctx.fill();
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.arc(x, y, 0.25*br/20, 0, Math.PI*2, false);
+    ctx.fillStyle = "#222";
+    ctx.fill();
+    ctx.closePath();
+    ctx.strokeStyle = "#FFF";
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(x-2*br/20, y);
+    ctx.lineTo(x+2*br/20, y);
+    ctx.stroke();
+    ctx.moveTo(x, y-2*br/20);
+    ctx.lineTo(x, y+2*br/20);
+    ctx.stroke();
+}
+
+canvas.addEventListener('click', onClick, false);
