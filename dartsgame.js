@@ -17,6 +17,7 @@ var white = "#FFF";
 var selectedwhite = 'rgba(256, 256, 256, 0.5)';
 var black = "#000";
 var dartswhite = "#CEB494";
+var dartsblack = "#161616";
 var red = "#900";
 var green = "#080";
 
@@ -25,7 +26,7 @@ function drawDartsBoard() {
     sangle = Math.PI / 20;
     ctx.beginPath();
     ctx.arc(bx, by, 1.3*br, 0, Math.PI*2, false);
-    ctx.fillStyle = black;
+    ctx.fillStyle = dartsblack;
     ctx.fill();
     ctx.closePath();
     ctx.beginPath();
@@ -40,7 +41,7 @@ function drawDartsBoard() {
         ctx.arc(bx, by, br, sangle+part*i, sangle+part*(i+1), false);
         ctx.moveTo(bx, by);
         if (i % 2 == 0) {
-            ctx.fillStyle = black;
+            ctx.fillStyle = dartsblack;
         } else {
             ctx.fillStyle = dartswhite;
         }
@@ -265,6 +266,7 @@ var moveActions = {
 
     over: function(target) {
         if (target == null) {
+            ctx.clearRect(0, 0, canvas.width/4, canvas.height/10);
             drawDartsBoard();
         } else {
             drawDartsBoard();
@@ -274,13 +276,13 @@ var moveActions = {
 }
 
 function drawPoints(p) {
-    ctx.clearRect(550, 0, 200, 100);
+    ctx.clearRect(canvas.width*4/5, 0, canvas.width/5, canvas.height/10);
     points += p;
-    ctx.fillStyle = black;
+    ctx.fillStyle = white;
     ctx.beginPath();
     fontsize = Math.round(3*br/20).toString();
     ctx.font = fontsize+"px Verdana";
-    ctx.fillText(points.toString(), 550, 50);
+    ctx.fillText(points.toString(), canvas.width*4/5, canvas.height/11);
     ctx.closePath();
 }
 
@@ -290,7 +292,7 @@ function drawSelectedPoints(target) {
         ctx.fillStyle = green;
     }
     else if (target == "db") {
-        text = "BULLSEYE";
+        text = "DBULL";
         ctx.fillStyle = red;
     }
     else if (target[0] == "d") {
@@ -313,19 +315,21 @@ function drawSelectedPoints(target) {
     }
     else {
         text = "S" + target.slice(1, target.length);
-        ctx.fillStyle = black;
+        ctx.fillStyle = white;
     }
-    ctx.clearRect(0, 0, 160, 60);
+    ctx.clearRect(0, 0, canvas.width/4, canvas.height/10);
     ctx.beginPath();
     fontsize = Math.round(3*br/20).toString();
     ctx.font = fontsize+"px Verdana";
-    ctx.fillText(text, 20, 50);
+    ctx.fillText(text, canvas.width/40, canvas.height/11);
     ctx.closePath();
 };
 
 var canvas = document.getElementById("dartsgameCanvas");
-canvas.width = 640
-canvas.height = 480
+canvas.width = window.innerWidth;
+canvas.height= window.innerHeight;
+//canvas.width = 640
+//canvas.height = 480
 bx = canvas.offsetWidth*0.5;
 by = canvas.offsetHeight*0.5;
 if (bx < by) {

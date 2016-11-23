@@ -1,4 +1,4 @@
-* { background: white;
+* { background: black;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -10,9 +10,6 @@
 
 canvas {
     display: inline;
-    min-width: 480px;
-    min-height: 360px;
-    margin: 50px;
-    border: 1px solid grey;
+    margin: 0px;
     auto;
 }
