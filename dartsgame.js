@@ -2,34 +2,33 @@ var targetNums = ["20", "1", "18", "4", "13",
                   "6", "10", "15", "2", "17",
                   "3", "19", "7", "16", "8",
                   "11", "14", "9", "12", "5"]
+var greenNums = new Set(["1", "4", "6", "15", "17", "19", "16", "11", "9", "5"]);
 var innerDoubleR = 19 / 20;
 var outerTripleR = 12.5 / 20;
 var innerTripleR = 11.5 / 20;
 var outerBullR = 1.4 / 20;
 var innerBullR = 1.3 / 40;
 
-var centerDoubleR = (innerDoubleR + 1) / 2;
-var centerOuterSingleR = (outerTripleR + innerDoubleR) / 2;
-var centerTripleR = (innerTripleR + outerTripleR) / 2;
-var centerInnerSingleR = (outerBullR + innerTripleR) / 2;
+var pxHover = 3;
+var rHover = 0.02;
 
+var white = "#FFF";
+var black = "#000";
+var dartswhite = "#CEB494";
+var red = "#900";
+var green = "#080";
 function drawDartsBoard() {
-    white = "#000";
-    black = "#FFF";
-    dartswhite = "#CEB494";
-    red = "#900";
-    green = "#080";
     part = Math.PI / 10;
     sangle = Math.PI / 20;
     ctx.beginPath();
     ctx.arc(bx, by, 1.3*br, 0, Math.PI*2, false);
-    ctx.fillStyle = white;
+    ctx.fillStyle = black;
     ctx.fill();
     ctx.closePath();
     ctx.beginPath();
     ctx.arc(bx, by, 1.28*br, 0, Math.PI*2, false);
     ctx.arc(bx, by, 1.27*br, 0, Math.PI*2, true);
-    ctx.fillStyle = black;
+    ctx.fillStyle = white;
     ctx.fill();
     ctx.closePath();
     for (i = 0; i < 20; i++) {
@@ -38,7 +37,7 @@ function drawDartsBoard() {
         ctx.arc(bx, by, br, sangle+part*i, sangle+part*(i+1), false);
         ctx.moveTo(bx, by);
         if (i % 2 == 0) {
-            ctx.fillStyle = white;
+            ctx.fillStyle = black;
         } else {
             ctx.fillStyle = dartswhite;
         }
@@ -80,7 +79,7 @@ function drawDartsBoard() {
         ctx.fill();
         ctx.closePath();
     }
-    ctx.fillStyle = black;
+    ctx.fillStyle = white;
     fontsize = Math.round(3*br/20).toString();
     ctx.font = fontsize+"px Verdana";
     for (i = 0; i < 20; i++) {
@@ -172,23 +171,23 @@ function checkTarget(x, y) {
 function drawSegmentIsHover(target) {
     if (target == "sb") {
         ctx.beginPath();
-        ctx.arc(bx, by, 1+outerBullR * br, 0, Math.PI*2, false);
+        ctx.arc(bx, by, pxHover+outerBullR * br, 0, Math.PI*2, false);
         ctx.arc(bx, by, innerBullR * br, 0, Math.PI*2, true);
-        ctx.fillStyle = "#FFF";
+        ctx.fillStyle = white;
         ctx.fill();
         ctx.closePath();
     }
     else if (target == "db") {
         ctx.beginPath();
-        ctx.arc(bx, by, 1+innerBullR * br, 0, Math.PI*2, false);
-        ctx.fillStyle = "#FFF";
+        ctx.arc(bx, by, pxHover+innerBullR * br, 0, Math.PI*2, false);
+        ctx.fillStyle = white;
         ctx.fill();
         ctx.closePath();
     }
     else {
         type = target[0];
-        tmp = target.slice(1, target.length);
-        i = targetNums.indexOf(target.slice(1, target.length));
+        num = target.slice(1, target.length);
+        i = targetNums.indexOf(num);
         if (0 <= i <= 4) {
             sectorCenter = Math.PI*2 * (3/4) + i * Math.PI / 10;
         }
@@ -198,23 +197,47 @@ function drawSegmentIsHover(target) {
         if (type == "d") {
             outerR = br;
             innerR = innerDoubleR * br;
+            if (greenNums.has(num)) {
+                ctx.fillStyle = green;
+            }
+            else {
+                ctx.fillStyle = red;
+            }
         }
         else if (type == "o") {
             outerR = innerDoubleR * br;
             innerR = outerTripleR * br;
+            if (greenNums.has(num)) {
+                ctx.fillStyle = dartswhite;
+            }
+            else {
+                ctx.fillStyle = black;
+            }
         }
         else if (type == "t") {
             outerR = outerTripleR * br;
             innerR = innerTripleR * br;
+            if (greenNums.has(num)) {
+                ctx.fillStyle = green;
+            }
+            else {
+                ctx.fillStyle = red;
+            }
         }
         else if (type == "i") {
             outerR = innerTripleR * br;
             innerR = outerBullR * br;
+            if (greenNums.has(num)) {
+                ctx.fillStyle = dartswhite;
+            }
+            else {
+                ctx.fillStyle = black;
+            }
         }
+        ctx.fillStyle = white;
         ctx.beginPath();
-        ctx.arc(bx, by, outerR+1, sectorCenter-Math.PI/19, sectorCenter+Math.PI/19, false);
-        ctx.arc(bx, by, innerR-1, sectorCenter+Math.PI/19, sectorCenter-Math.PI/19, true);
-        ctx.fillStyle = "#FFF";
+        ctx.arc(bx, by, outerR+pxHover, sectorCenter-(Math.PI/20+rHover), sectorCenter+(Math.PI/20+rHover), false);
+        ctx.arc(bx, by, innerR-pxHover, sectorCenter+(Math.PI/20+rHover), sectorCenter-(Math.PI/20+rHover), true);
         ctx.fill();
         ctx.closePath();
     }
@@ -244,9 +267,12 @@ var moveActions = {
 
     over: function(target) {
         if (target == null) {
+            ctx.globalAlpha = 1.0;
             drawDartsBoard();
         } else {
+            ctx.globalAlpha = 1.0;
             drawDartsBoard();
+            ctx.globalAlpha = 0.5;
             drawSegmentIsHover(target);
         }
     },
