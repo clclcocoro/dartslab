@@ -12,6 +12,6 @@ canvas {
     display: inline;
     min-width: 480px;
     min-height: 360px;
-    margin: 0;
+    margin: 50px;
     auto;
 }
