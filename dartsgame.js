@@ -3,6 +3,7 @@ var targetNums = ["20", "1", "18", "4", "13",
                   "3", "19", "7", "16", "8",
                   "11", "14", "9", "12", "5"]
 var greenNums = new Set(["1", "4", "6", "15", "17", "19", "16", "11", "9", "5"]);
+
 var innerDoubleR = 19 / 20;
 var outerTripleR = 12.5 / 20;
 var innerTripleR = 11.5 / 20;
@@ -18,6 +19,7 @@ var black = "#000";
 var dartswhite = "#CEB494";
 var red = "#900";
 var green = "#080";
+
 function drawDartsBoard() {
     part = Math.PI / 10;
     sangle = Math.PI / 20;
@@ -327,9 +329,9 @@ canvas.height = 480
 bx = canvas.offsetWidth*0.5;
 by = canvas.offsetHeight*0.5;
 if (bx < by) {
-    br = bx * 0.75;
+    br = bx * 0.7;
 } else {
-    br = by * 0.75;
+    br = by * 0.7;
 }
 var ctx = canvas.getContext("2d");
 var points = 0;
