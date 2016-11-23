@@ -13,6 +13,7 @@ var pxHover = 3;
 var rHover = 0.02;
 
 var white = "#FFF";
+var selectedwhite = 'rgba(256, 256, 256, 0.5)';
 var black = "#000";
 var dartswhite = "#CEB494";
 var red = "#900";
@@ -115,6 +116,22 @@ function onClick(e) {
     ctx.moveTo(x, y-2*br/20);
     ctx.lineTo(x, y+2*br/20);
     ctx.stroke();
+    target = checkTarget(x, y);
+    if (target == "sb") {
+        drawPoints(25);
+    }
+    else if (target == "db") {
+        drawPoints(50);
+    }
+    else if (target[0] == "d") {
+        drawPoints(parseInt(target.slice(1, target.length))*2);
+    }
+    else if (target[0] == "t") {
+        drawPoints(parseInt(target.slice(1, target.length))*3);
+    }
+    else {
+        drawPoints(parseInt(target.slice(1, target.length)));
+    }
 }
 
 function onMouseOver(e) {
@@ -173,16 +190,18 @@ function drawSegmentIsHover(target) {
         ctx.beginPath();
         ctx.arc(bx, by, pxHover+outerBullR * br, 0, Math.PI*2, false);
         ctx.arc(bx, by, innerBullR * br, 0, Math.PI*2, true);
-        ctx.fillStyle = white;
+        ctx.fillStyle = selectedwhite;
         ctx.fill();
         ctx.closePath();
+        drawSelectedPoints(target);
     }
     else if (target == "db") {
         ctx.beginPath();
         ctx.arc(bx, by, pxHover+innerBullR * br, 0, Math.PI*2, false);
-        ctx.fillStyle = white;
+        ctx.fillStyle = selectedwhite;
         ctx.fill();
         ctx.closePath();
+        drawSelectedPoints(target);
     }
     else {
         type = target[0];
@@ -197,49 +216,26 @@ function drawSegmentIsHover(target) {
         if (type == "d") {
             outerR = br;
             innerR = innerDoubleR * br;
-            if (greenNums.has(num)) {
-                ctx.fillStyle = green;
-            }
-            else {
-                ctx.fillStyle = red;
-            }
         }
         else if (type == "o") {
             outerR = innerDoubleR * br;
             innerR = outerTripleR * br;
-            if (greenNums.has(num)) {
-                ctx.fillStyle = dartswhite;
-            }
-            else {
-                ctx.fillStyle = black;
-            }
         }
         else if (type == "t") {
             outerR = outerTripleR * br;
             innerR = innerTripleR * br;
-            if (greenNums.has(num)) {
-                ctx.fillStyle = green;
-            }
-            else {
-                ctx.fillStyle = red;
-            }
         }
         else if (type == "i") {
             outerR = innerTripleR * br;
             innerR = outerBullR * br;
-            if (greenNums.has(num)) {
-                ctx.fillStyle = dartswhite;
-            }
-            else {
-                ctx.fillStyle = black;
-            }
         }
-        ctx.fillStyle = white;
+        ctx.fillStyle = selectedwhite;
         ctx.beginPath();
         ctx.arc(bx, by, outerR+pxHover, sectorCenter-(Math.PI/20+rHover), sectorCenter+(Math.PI/20+rHover), false);
         ctx.arc(bx, by, innerR-pxHover, sectorCenter+(Math.PI/20+rHover), sectorCenter-(Math.PI/20+rHover), true);
         ctx.fill();
         ctx.closePath();
+        drawSelectedPoints(target);
     }
 }
 
@@ -267,16 +263,63 @@ var moveActions = {
 
     over: function(target) {
         if (target == null) {
-            ctx.globalAlpha = 1.0;
             drawDartsBoard();
         } else {
-            ctx.globalAlpha = 1.0;
             drawDartsBoard();
-            ctx.globalAlpha = 0.5;
             drawSegmentIsHover(target);
         }
     },
 }
+
+function drawPoints(p) {
+    ctx.clearRect(550, 0, 200, 100);
+    points += p;
+    ctx.fillStyle = black;
+    ctx.beginPath();
+    fontsize = Math.round(3*br/20).toString();
+    ctx.font = fontsize+"px Verdana";
+    ctx.fillText(points.toString(), 550, 50);
+    ctx.closePath();
+}
+
+function drawSelectedPoints(target) {
+    if (target == "sb") {
+        text = "BULL";
+        ctx.fillStyle = green;
+    }
+    else if (target == "db") {
+        text = "BULLSEYE";
+        ctx.fillStyle = red;
+    }
+    else if (target[0] == "d") {
+        text = "D" + target.slice(1, target.length);
+        if (greenNums.has(target.slice(1, target.length))) {
+            ctx.fillStyle = green;
+        }
+        else {
+            ctx.fillStyle = red;
+        }
+    }
+    else if (target[0] == "t") {
+        text = "T" + target.slice(1, target.length);
+        if (greenNums.has(target.slice(1, target.length))) {
+            ctx.fillStyle = green;
+        }
+        else {
+            ctx.fillStyle = red;
+        }
+    }
+    else {
+        text = "S" + target.slice(1, target.length);
+        ctx.fillStyle = black;
+    }
+    ctx.clearRect(0, 0, 160, 60);
+    ctx.beginPath();
+    fontsize = Math.round(3*br/20).toString();
+    ctx.font = fontsize+"px Verdana";
+    ctx.fillText(text, 20, 50);
+    ctx.closePath();
+};
 
 var canvas = document.getElementById("dartsgameCanvas");
 canvas.width = 640
@@ -289,7 +332,9 @@ if (bx < by) {
     br = by * 0.75;
 }
 var ctx = canvas.getContext("2d");
+var points = 0;
 drawDartsBoard();
+drawPoints(0);
 canvas.addEventListener('click', onClick, false);
 canvas.addEventListener('mouseover', onMouseOver, false);
 canvas.addEventListener('mouseout', onMouseOut, false);
